@@ -22,17 +22,17 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@controllers/*": [
-        "./src/controllers/*"
+      "@schemas/*": [
+        "./src/schemas/*"
       ],
       "@services/*": [
         "./src/services/*"
       ],
-      "@models/*": [
-        "./src/models/*"
+      "@controllers/*": [
+        "./src/controllers"
       ],
-      "@database/*": [
-        "./src/database/*"
+      "@errors/*": [
+        "./src/errors"
       ]
     }
   },
