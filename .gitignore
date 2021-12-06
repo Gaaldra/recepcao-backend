@@ -1,4 +1,8 @@
 node_modules/
 dist/
+
+#Arquivos
 .vscode
+.env
+globalConfig.json
 globalConfig.json
