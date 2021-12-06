@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
 
-mongoose.connect('mongodb://localhost/my_database')
+mongoose.connect(String(process.env.MONGO_URL))
 
 export default mongoose
