@@ -1,8 +1,8 @@
 node_modules/
 dist/
+.vscode
+__tests__/coverage/
 
 #Arquivos
-.vscode
 .env
-globalConfig.json
 globalConfig.json
