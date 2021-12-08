@@ -20,7 +20,7 @@ describe('CreateChamadoService', () => {
     await Chamado.deleteMany({})
   })
 
-  it('Should be able to create a new Chamado', async () => {
+  it('Deve ser possivel criar um chamado', async () => {
     const farmacia: FarmaciaI = {
       razao: 'Viva',
       fantasia: 'Manipulação',

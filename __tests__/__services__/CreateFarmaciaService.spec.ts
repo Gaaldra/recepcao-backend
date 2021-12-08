@@ -19,7 +19,7 @@ describe('CreateFarmaciaService', () => {
     await Chamado.deleteMany({})
   })
 
-  it('should be able to create new farmacias', async () => {
+  it('Deve ser possivel criar uma farmacia', async () => {
     const farmacia: FarmaciaI = {
       razao: 'Viva',
       fantasia: 'Manipulação',
@@ -42,7 +42,7 @@ describe('CreateFarmaciaService', () => {
     )
   })
 
-  it('should no be able to create a farmacia that already exists', async () => {
+  it('Não deve ser possivel criar uma farmacia que já existe', async () => {
     const farmacia: FarmaciaI = {
       razao: 'Viva',
       fantasia: 'Manipulação',

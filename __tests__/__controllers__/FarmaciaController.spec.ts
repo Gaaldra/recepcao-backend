@@ -1,10 +1,21 @@
-import { Farmacia, FarmaciaI } from '@schemas/Farmacia'
 import mongoose from 'mongoose'
-import { app } from '../../src/server'
-import request from 'supertest'
+import FarmaciaController from '@controllers/FarmaciaController'
 import CreateFarmaciaService from '@services/CreateFarmaciaService'
+import { Farmacia, FarmaciaI } from '@schemas/Farmacia'
+import { getMockReq, getMockRes } from '@jest-mock/express'
 
 describe('FarmaciaController', () => {
+  const farmacia1: FarmaciaI = {
+    razao: 'Gabriel Medicamentos',
+    fantasia: 'GabMedics',
+    cnpj: '1234567890',
+    telefones: [
+      '27997218644'
+    ]
+  }
+  const { res, next } = getMockRes()
+  const req = getMockReq()
+
   beforeAll(async () => {
     if (!process.env.MONGO_URL) throw new Error('MongoDB server not initialized')
 
@@ -19,42 +30,38 @@ describe('FarmaciaController', () => {
     await Farmacia.deleteMany({})
   })
 
-  it('Should be returned a response with a new farmacia created', async () => {
-    const farmacia: FarmaciaI = {
-      razao: 'Gabriel Medicamentos',
-      fantasia: 'GabMedics',
-      cnpj: '1234567890',
-      telefones: [
-        '27997218644'
-      ]
-    }
+  it('Deve ser possivel criar uma nova farmacia e retorna-la como resposta', async () => {
+    const { res, next } = getMockRes()
+    const req = getMockReq({ body: farmacia1 })
 
-    const res = await request(app)
-      .post('/farmacia/add')
-      .send(farmacia)
+    await FarmaciaController.createFarmacia(req, res, next)
 
-    expect(res.statusCode).toBe(201)
-    expect(res.body.result).toEqual(expect.objectContaining(farmacia))
+    expect(res.status).toHaveBeenCalledWith(201)
+    expect(res.json).toHaveBeenCalledWith(expect.objectContaining(farmacia1))
   })
 
-  it('Should be returned a response with status code 409 - Farmacia already exists ', async () => {
-    const farmacia: FarmaciaI = {
+  it('Não deve ser possivel criar uma farmacia que já existe', async () => {
+    const createFarmacia = new CreateFarmaciaService()
+    await createFarmacia.execute(farmacia1)
+
+    req.body = farmacia1
+    await FarmaciaController.createFarmacia(req, res, next)
+
+    expect(next).toHaveBeenCalledWith(Error('Farmacia já existe'))
+  })
+
+  it('Não deve ser possivel criar uma farmacia sem os atributos necessarios', async () => {
+    const farmacia2 = {
       razao: 'Gabriel Medicamentos',
       fantasia: 'GabMedics',
-      cnpj: '1234567890',
       telefones: [
         '27997218644'
       ]
     }
 
-    const createFarmacia = new CreateFarmaciaService()
-    await createFarmacia.execute(farmacia)
+    req.body = farmacia2
 
-    const res = await request(app)
-      .post('/farmacia/add')
-      .send(farmacia)
-
-    expect(res.statusCode).toBe(409)
-    expect(res.body).toHaveProperty('message')
+    await FarmaciaController.createFarmacia(req, res, next)
+    expect(next).toHaveBeenCalledWith(Error('Invalid Request'))
   })
 })
