@@ -29,10 +29,10 @@
         "./src/services/*"
       ],
       "@controllers/*": [
-        "./src/controllers"
+        "./src/controllers/*"
       ],
       "@errors/*": [
-        "./src/errors"
+        "./src/errors/*"
       ]
     }
   },
