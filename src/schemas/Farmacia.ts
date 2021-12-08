@@ -4,7 +4,7 @@ interface FarmaciaI {
   razao: string
   fantasia: string
   cnpj: string
-  telefones: [string]
+  telefones?: [string]
 }
 
 const schema = new Schema<FarmaciaI>({

@@ -5,7 +5,7 @@ interface ChamadoI {
   fechado?: Date
   farmacia: FarmaciaI
   assunto: string
-  observacao: [string]
+  observacao?: [string]
 }
 
 const schema = new Schema<ChamadoI>({
