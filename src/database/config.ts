@@ -1,5 +1,7 @@
-import mongoose from 'mongoose'
+import { createConnection } from 'typeorm'
 
-mongoose.connect(String(process.env.MONGO_URL))
-
-export default mongoose
+try {
+  createConnection()
+} catch (error) {
+  console.log(error)
+}
