@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import 'reflect-metadata'
 import express from 'express'
 import { routes } from './routes'
 import './database/config'
@@ -10,7 +11,5 @@ app.use(express.json())
 app.use(routes)
 
 app.listen(PORT, '0.0.0.0', () =>
-  console.log(`Hosteando na ${PORT}`)
+  console.log(`Hospedado na ${PORT}`)
 )
-
-export { app }
