@@ -1,17 +1,17 @@
 import { Column, Entity, OneToMany, Unique } from 'typeorm'
 import { BaseEntity } from './BaseEntity'
-import { TelefoneFarmacia } from './TelefoneFarmacia'
+import { PhonePharmacy } from './PhonePharmacy'
 
-export type FarmaciaT = {
+export type PhamacyT = {
   razaoSocial: string
   nomeFantasia: string
   cnpj: string
-  telefones: []
+  phones: []
 }
 
 @Entity()
 @Unique(['cnpj'])
-export class Farmacia extends BaseEntity {
+export class Pharmacy extends BaseEntity {
   @Column()
   razaoSocial: string
 
@@ -21,6 +21,6 @@ export class Farmacia extends BaseEntity {
   @Column()
   cnpj: string
 
-  @OneToMany(() => TelefoneFarmacia, telefone => telefone.farmacia)
-  telefones: TelefoneFarmacia[]
+  @OneToMany(() => PhonePharmacy, phone => phone.farmacia)
+  phones: PhonePharmacy[]
 }
