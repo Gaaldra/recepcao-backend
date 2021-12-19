@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany, Unique } from 'typeorm'
 import { BaseEntity } from './BaseEntity'
 import { PhonePharmacy } from './PhonePharmacy'
 
-export type PhamacyT = {
+export type PharmacyT = {
   razaoSocial: string
   nomeFantasia: string
   cnpj: string

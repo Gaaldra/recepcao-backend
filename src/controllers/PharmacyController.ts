@@ -1,12 +1,12 @@
 import { InvalidRequest } from '@errors/InvalidRequest'
 import PharmacyService from '@services/PharmacyService'
 import { NextFunction, Request, Response } from 'express'
-import { PhamacyT } from 'src/entity/Pharmacy'
+import { PharmacyT } from 'src/entity/Pharmacy'
 
 class PharmacyController {
   async createPharmacy (request: Request, response: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const newFarm: PhamacyT = request.body
+      const newFarm: PharmacyT = request.body
       const farmaciaService = new PharmacyService(newFarm)
       const result = await farmaciaService.create()
       return response.status(201).json(result)
@@ -17,7 +17,7 @@ class PharmacyController {
 
   async updatePharmacy (request: Request, response: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const { razaoSocial, nomeFantasia, cnpj, phones: telefones }: PhamacyT = request.body
+      const { razaoSocial, nomeFantasia, cnpj, phones: telefones }: PharmacyT = request.body
       const { id } = request.params
       if (!id) return next(new InvalidRequest('Necessario um id'))
       const newInfosFarmacia = new PharmacyService({ razaoSocial, nomeFantasia, cnpj, phones: telefones })
@@ -30,18 +30,29 @@ class PharmacyController {
 
   async getAllPharmacies (request: Request, response: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const result = await PharmacyService.getPharmacy()
+      const result = await PharmacyService.getAllPharmacies()
       return response.json(result)
     } catch (error) {
       next(error)
     }
   }
 
-  async getOnePharmacy (request: Request, response: Response, next: NextFunction): Promise<Response | void> {
+  async getSomePharmacy (request: Request, response: Response, next: NextFunction): Promise<Response | void> {
     try {
       const { filter } = request.params
       if (!filter) return next(new InvalidRequest())
-      const result = await PharmacyService.getPharmacy(filter)
+      const result = await PharmacyService.getSomePharmacies(filter)
+      return response.send(JSON.stringify(result))
+    } catch (error) {
+      return next(error)
+    }
+  }
+
+  async getOnePharmacy (request: Request, response: Response, next: NextFunction): Promise<Response | void> {
+    try {
+      const { id } = request.params
+      if (!id) return next(new InvalidRequest())
+      const result = await PharmacyService.getOnePharmacy(id)
       return response.json(result)
     } catch (error) {
       return next(error)

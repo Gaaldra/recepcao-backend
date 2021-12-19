@@ -1,16 +1,16 @@
 import { DuplicateError } from '@errors/DuplicateError'
 import { InvalidRequest } from '@errors/InvalidRequest'
-import { Pharmacy, PhamacyT } from 'src/entity/Pharmacy'
+import { Pharmacy, PharmacyT } from 'src/entity/Pharmacy'
 import { PharmacyRepository, PhonesRepository } from 'src/repositories'
 import { Like } from 'typeorm'
 
-class PharmacyService implements PhamacyT {
+class PharmacyService implements PharmacyT {
   readonly razaoSocial: string;
   readonly nomeFantasia: string
   readonly cnpj: string
   readonly phones: []
 
-  constructor ({ razaoSocial, nomeFantasia, cnpj, phones }: PhamacyT) {
+  constructor ({ razaoSocial, nomeFantasia, cnpj, phones }: PharmacyT) {
     this.razaoSocial = razaoSocial
     this.nomeFantasia = nomeFantasia
     this.cnpj = cnpj
@@ -64,17 +64,26 @@ class PharmacyService implements PhamacyT {
     return result
   }
 
-  static async getPharmacy (id?: string, filter = ''): Promise<Pharmacy | Pharmacy[] | undefined> {
+  static async getAllPharmacies (): Promise<Pharmacy[]> {
+    const repo = PharmacyRepository()
+    return await repo.find({ relations: ['phones'] })
+  }
+
+  static async getSomePharmacies (filter: string): Promise<Pharmacy | Pharmacy[] | undefined> {
     const repo = PharmacyRepository()
     return await repo.find({
       where: [
-        { id: filter },
         { razaoSocial: Like(`%${filter}%`) },
         { nomeFantasia: Like(`%${filter}%`) },
         { cnpj: Like(`%${filter}%`) }
       ],
       relations: ['phones']
     })
+  }
+
+  static async getOnePharmacy (id: string): Promise<Pharmacy|undefined> {
+    const repo = PharmacyRepository()
+    return await repo.findOne(id, { relations: ['phones'] })
   }
 }
 
