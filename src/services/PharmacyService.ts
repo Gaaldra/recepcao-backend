@@ -1,6 +1,6 @@
 import { DuplicateError } from '@errors/DuplicateError'
 import { InvalidRequest } from '@errors/InvalidRequest'
-import { Pharmacy, PharmacyT } from 'src/entity/Pharmacy'
+import { Pharmacy, PharmacyT } from '../entities/Pharmacy'
 import { PharmacyRepository, PhonesRepository } from 'src/repositories'
 import { Like } from 'typeorm'
 
@@ -9,6 +9,7 @@ class PharmacyService implements PharmacyT {
   readonly nomeFantasia: string
   readonly cnpj: string
   readonly phones: []
+  private pharmacyRepository = PharmacyRepository()
 
   constructor ({ razaoSocial, nomeFantasia, cnpj, phones }: PharmacyT) {
     this.razaoSocial = razaoSocial
@@ -22,18 +23,16 @@ class PharmacyService implements PharmacyT {
     if (!this.razaoSocial) throw new InvalidRequest('A razão social é necessária')
     if (!this.nomeFantasia) throw new InvalidRequest('O nome fantasia é necessário')
     if (!this.cnpj) throw new InvalidRequest('O CNPJ é necessário')
-    return true
   }
 
   async create (): Promise<Pharmacy> {
-    const repo = PharmacyRepository()
-    if (await repo.findOne({ cnpj: this.cnpj })) throw new DuplicateError('Farmacia already exists')
-    const farmacia = repo.create({
+    if (await this.pharmacyRepository.findOne({ cnpj: this.cnpj })) throw new DuplicateError('Farmacia already exists')
+    const farmacia = this.pharmacyRepository.create({
       razaoSocial: this.razaoSocial,
       nomeFantasia: this.nomeFantasia,
       cnpj: this.cnpj
     })
-    const result = await repo.save(farmacia)
+    const result = await this.pharmacyRepository.save(farmacia)
     for (const telefone of this.phones) {
       const telefoneRepo = PhonesRepository()
       if (await telefoneRepo.findOne({ phoneNumber: telefone })) continue
@@ -81,7 +80,7 @@ class PharmacyService implements PharmacyT {
     })
   }
 
-  static async getOnePharmacy (id: string): Promise<Pharmacy|undefined> {
+  static async getOnePharmacy (id: string): Promise<Pharmacy | undefined> {
     const repo = PharmacyRepository()
     return await repo.findOne(id, { relations: ['phones'] })
   }
