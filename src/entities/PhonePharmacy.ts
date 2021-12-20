@@ -15,5 +15,5 @@ export class PhonePharmacy extends BaseEntity {
   phoneNumber: string
 
   @ManyToOne(() => Pharmacy, pharmacy => pharmacy.phones)
-  farmacia: Pharmacy[]
+  farmacia: Pharmacy
 }

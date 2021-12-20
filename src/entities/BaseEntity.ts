@@ -8,7 +8,7 @@ export class BaseEntity {
   @CreateDateColumn()
   createdAt: Date
 
-  constructor () {
+  constructor() {
     if (!this.id) {
       this.id = uuid()
     }
