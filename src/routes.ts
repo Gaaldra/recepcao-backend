@@ -10,10 +10,12 @@ routes.get('/farmacia/get-all', PharmacyController.getAllPharmacies)
 routes.get('/farmacia/get-one/:id', PharmacyController.getOnePharmacy)
 routes.get('/farmacia/get-some/:filter', PharmacyController.getSomePharmacy)
 routes.get('/tickets/get-all', TicketController.getAll)
+routes.get('/tickets/get-all/:status', TicketController.getAllByStatus)
 
 // Post routes
 routes.post('/farmacia/add', PharmacyController.createPharmacy)
-routes.post('/tickets/add', TicketController.create)
+routes.post('/tickets/add', TicketController.createTicket)
+routes.post('/tickets/close/:id', TicketController.closeTicket)
 
 // Put routes
 routes.put('/farmacia/update/:id', PharmacyController.updatePharmacy)

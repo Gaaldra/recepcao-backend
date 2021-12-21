@@ -1,7 +1,8 @@
-import { InvalidRequest } from '@errors/InvalidRequest'
+import InvalidRequest from '@errors/InvalidRequest'
 import { Pharmacy } from 'src/entities/Pharmacy'
-import Ticket, { TicketT } from 'src/entities/Ticket'
-import { TicketRepository } from 'src/repositories'
+import { Ticket, TicketT } from 'src/entities/Ticket'
+import { PharmacyRepository, TicketRepository } from 'src/repositories'
+import { IsNull, Not, UpdateResult } from 'typeorm'
 
 export class TicketService implements TicketT {
   observation: string
@@ -26,6 +27,7 @@ export class TicketService implements TicketT {
   }
 
   async create (): Promise<Ticket> {
+    if (!(await PharmacyRepository().findOne(this.pharmacy))) throw new InvalidRequest('Company doesn\'t exists')
     const ticket = this.ticketRepository.create({
       observation: this.observation,
       pharmacy: this.pharmacy,
@@ -36,8 +38,25 @@ export class TicketService implements TicketT {
     return result
   }
 
+  static async closeTicket (id: string): Promise<UpdateResult> {
+    const repo = TicketRepository()
+    const result = repo.update({ id: id }, { closedAt: new Date().toUTCString() })
+    return result
+  }
+
   static async getAll (): Promise<Ticket[]> {
     const repo = TicketRepository()
     return await repo.find({ relations: ['pharmacy'] })
+  }
+
+  static async getAllByStatus (status: string): Promise<Ticket[]> {
+    const repo = TicketRepository()
+    if (status.includes('open')) {
+      return await repo.find({
+        where: { closedAt: IsNull() },
+        relations: ['pharmacy']
+      })
+    }
+    return await repo.find({ where: { closedAt: Not(IsNull()) }, relations: ['pharmacy'] })
   }
 }
