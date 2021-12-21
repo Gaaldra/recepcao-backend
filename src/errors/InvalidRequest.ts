@@ -1,9 +1,10 @@
 import BaseError from './BaseError'
 
-class InvalidRequest extends BaseError {
-  constructor (message = 'Invalid Request') {
-    super(406, message)
+export default class InvalidRequest extends BaseError {
+  code: number = 406
+  message: string = 'Invalid Request'
+  constructor (message?: string) {
+    super()
+    if (message) this.message = message
   }
 }
-
-export { InvalidRequest }

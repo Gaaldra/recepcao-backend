@@ -1,9 +1,10 @@
 import BaseError from './BaseError'
 
-class DuplicateError extends BaseError {
+export default class DuplicateError extends BaseError {
+  code: number = 409
+  message: string = 'An duplicate error has occurred with your requisition'
   constructor (message?: string) {
-    super(409, message)
+    super()
+    if (message) this.message = message
   }
 }
-
-export { DuplicateError }
