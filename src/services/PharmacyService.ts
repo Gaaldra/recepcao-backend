@@ -1,8 +1,9 @@
-import { DuplicateError } from '@errors/DuplicateError'
-import { InvalidRequest } from '@errors/InvalidRequest'
+import DuplicateError from '@errors/DuplicateError'
+import InvalidRequest from '@errors/InvalidRequest'
 import { Pharmacy, PharmacyT } from '../entities/Pharmacy'
 import { PharmacyRepository, PhonesRepository } from 'src/repositories'
 import { Like } from 'typeorm'
+import UpdateError from '@errors/UpdateError'
 
 class PharmacyService implements PharmacyT {
   readonly razaoSocial: string;
@@ -45,22 +46,17 @@ class PharmacyService implements PharmacyT {
   }
 
   async update (id: string): Promise<Pharmacy> {
-    const repoFarm = PharmacyRepository()
-    const result = await repoFarm.save({
-      id,
-      razaoSocial: this.razaoSocial,
-      nomeFantasia: this.nomeFantasia,
-      cnpj: this.cnpj
-    })
-    for (const telefone of this.phones) {
-      const telefoneRepo = PhonesRepository()
-      if (await telefoneRepo.findOne({ phoneNumber: telefone })) continue
-      const newTelefone = telefoneRepo.create()
-      newTelefone.phoneNumber = telefone
-      newTelefone.farmacia = result
-      await telefoneRepo.save(newTelefone)
+    try {
+      const result = await this.pharmacyRepository.save({
+        id,
+        razaoSocial: this.razaoSocial,
+        nomeFantasia: this.nomeFantasia,
+        cnpj: this.cnpj
+      })
+      return result
+    } catch (error) {
+      throw new UpdateError()
     }
-    return result
   }
 
   static async getAllPharmacies (): Promise<Pharmacy[]> {
