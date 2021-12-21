@@ -1,13 +1,13 @@
 import InvalidRequest from '@errors/InvalidRequest'
-import PharmacyService from '@services/PharmacyService'
+import CompanyService from '@services/CompanyService'
 import { NextFunction, Request, Response } from 'express'
-import { PharmacyT } from 'src/entities/Pharmacy'
+import { CompanyT } from 'src/entities/Company'
 
 class PharmacyController {
   async createPharmacy (request: Request, response: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const newFarm: PharmacyT = request.body
-      const farmaciaService = new PharmacyService(newFarm)
+      const newFarm: CompanyT = request.body
+      const farmaciaService = new CompanyService(newFarm)
       const result = await farmaciaService.create()
       return response.status(201).json(result)
     } catch (error) {
@@ -17,11 +17,11 @@ class PharmacyController {
 
   async updatePharmacy (request: Request, response: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const { razaoSocial, nomeFantasia, cnpj, phones: telefones }: PharmacyT = request.body
+      const company: CompanyT = request.body
       const { id } = request.params
       if (!id) return next(new InvalidRequest('Necessario um id'))
-      const newInfosFarmacia = new PharmacyService({ razaoSocial, nomeFantasia, cnpj, phones: telefones })
-      const result = await newInfosFarmacia.update(id)
+      const updateCompany = new CompanyService(company)
+      const result = await updateCompany.update(id)
       return response.json(result)
     } catch (error) {
       return next(error)
@@ -30,7 +30,7 @@ class PharmacyController {
 
   async getAllPharmacies (request: Request, response: Response, next: NextFunction): Promise<Response | void> {
     try {
-      const result = await PharmacyService.getAllPharmacies()
+      const result = await CompanyService.getAllPharmacies()
       return response.json(result)
     } catch (error) {
       next(error)
@@ -41,7 +41,7 @@ class PharmacyController {
     try {
       const { filter } = request.params
       if (!filter) return next(new InvalidRequest())
-      const result = await PharmacyService.getSomePharmacies(filter)
+      const result = await CompanyService.getSomePharmacies(filter)
       return response.send(JSON.stringify(result))
     } catch (error) {
       return next(error)
@@ -52,7 +52,7 @@ class PharmacyController {
     try {
       const { id } = request.params
       if (!id) return next(new InvalidRequest())
-      const result = await PharmacyService.getOnePharmacy(id)
+      const result = await CompanyService.getOnePharmacy(id)
       return response.json(result)
     } catch (error) {
       return next(error)

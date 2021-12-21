@@ -1,12 +1,12 @@
 import InvalidRequest from '@errors/InvalidRequest'
-import { Pharmacy } from 'src/entities/Pharmacy'
+import { Company } from 'src/entities/Company'
 import { Ticket, TicketT } from 'src/entities/Ticket'
-import { PharmacyRepository, TicketRepository } from 'src/repositories'
+import { CompanyRepository, TicketRepository } from 'src/repositories'
 import { IsNull, Not, UpdateResult } from 'typeorm'
 
 export class TicketService implements TicketT {
   observation: string
-  pharmacy: Pharmacy
+  company: Company
   tecnico: string
   topic: string
   private ticketRepository = TicketRepository()
@@ -15,22 +15,22 @@ export class TicketService implements TicketT {
     this.topic = ticket.topic
     this.observation = ticket.observation
     this.tecnico = ticket.tecnico
-    this.pharmacy = ticket.pharmacy
+    this.company = ticket.company
     this.isValid()
   }
 
   private isValid () {
     if (!this.observation) throw new InvalidRequest('Missing observation')
-    if (!this.pharmacy) throw new InvalidRequest('Missing pharmacy')
+    if (!this.company) throw new InvalidRequest('Missing pharmacy')
     if (!this.tecnico) throw new InvalidRequest('Missing tecnico')
     if (!this.topic) throw new InvalidRequest('Missing topic')
   }
 
   async create (): Promise<Ticket> {
-    if (!(await PharmacyRepository().findOne(this.pharmacy))) throw new InvalidRequest('Company doesn\'t exists')
+    if (!(await CompanyRepository().findOne(this.company))) throw new InvalidRequest('Company doesn\'t exists')
     const ticket = this.ticketRepository.create({
       observation: this.observation,
-      pharmacy: this.pharmacy,
+      company: this.company,
       tecnico: this.tecnico,
       topic: this.topic
     })

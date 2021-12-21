@@ -1,9 +1,9 @@
 import { Column, Entity, OneToMany, Unique } from 'typeorm'
 import { BaseEntity } from './BaseEntity'
-import { PhonePharmacy } from './PhonePharmacy'
+import { PhoneCompany } from './PhoneCompany'
 import { Ticket } from './Ticket'
 
-export type PharmacyT = {
+export type CompanyT = {
   razaoSocial: string
   nomeFantasia: string
   cnpj: string
@@ -12,7 +12,7 @@ export type PharmacyT = {
 
 @Entity()
 @Unique(['cnpj'])
-export class Pharmacy extends BaseEntity {
+export class Company extends BaseEntity {
   @Column()
   razaoSocial: string
 
@@ -22,9 +22,9 @@ export class Pharmacy extends BaseEntity {
   @Column()
   cnpj: string
 
-  @OneToMany(() => Ticket, ticket => ticket.pharmacy)
+  @OneToMany(() => Ticket, ticket => ticket.company)
   tickets: Ticket[]
 
-  @OneToMany(() => PhonePharmacy, phone => phone.farmacia)
-  phones: PhonePharmacy[]
+  @OneToMany(() => PhoneCompany, phone => phone.companies)
+  phones: PhoneCompany[]
 }

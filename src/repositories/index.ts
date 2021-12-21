@@ -1,14 +1,14 @@
 import { getRepository } from 'typeorm'
-import { PhonePharmacy } from 'src/entities/PhonePharmacy'
-import { Pharmacy } from '../entities/Pharmacy'
+import { PhoneCompany } from 'src/entities/PhoneCompany'
+import { Company } from '../entities/Company'
 import { Ticket } from 'src/entities/Ticket'
 
-export const PharmacyRepository = () => {
-  return getRepository(Pharmacy)
+export const CompanyRepository = () => {
+  return getRepository(Company)
 }
 
 export const PhonesRepository = () => {
-  return getRepository(PhonePharmacy)
+  return getRepository(PhoneCompany)
 }
 
 export const TicketRepository = () => {

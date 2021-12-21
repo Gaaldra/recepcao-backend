@@ -1,18 +1,18 @@
 import DuplicateError from '@errors/DuplicateError'
 import InvalidRequest from '@errors/InvalidRequest'
-import { Pharmacy, PharmacyT } from '../entities/Pharmacy'
-import { PharmacyRepository, PhonesRepository } from 'src/repositories'
+import { Company, CompanyT } from '../entities/Company'
+import { CompanyRepository, PhonesRepository } from 'src/repositories'
 import { Like } from 'typeorm'
 import UpdateError from '@errors/UpdateError'
 
-class PharmacyService implements PharmacyT {
+class CompanyService implements CompanyT {
   readonly razaoSocial: string;
   readonly nomeFantasia: string
   readonly cnpj: string
   readonly phones: []
-  private pharmacyRepository = PharmacyRepository()
+  private companyRepository = CompanyRepository()
 
-  constructor ({ razaoSocial, nomeFantasia, cnpj, phones }: PharmacyT) {
+  constructor ({ razaoSocial, nomeFantasia, cnpj, phones }: CompanyT) {
     this.razaoSocial = razaoSocial
     this.nomeFantasia = nomeFantasia
     this.cnpj = cnpj
@@ -26,14 +26,14 @@ class PharmacyService implements PharmacyT {
     if (!this.cnpj) throw new InvalidRequest('O CNPJ é necessário')
   }
 
-  async create (): Promise<Pharmacy> {
-    if (await this.pharmacyRepository.findOne({ cnpj: this.cnpj })) throw new DuplicateError('Farmacia already exists')
-    const farmacia = this.pharmacyRepository.create({
+  async create (): Promise<Company> {
+    if (await this.companyRepository.findOne({ cnpj: this.cnpj })) throw new DuplicateError('Farmacia already exists')
+    const farmacia = this.companyRepository.create({
       razaoSocial: this.razaoSocial,
       nomeFantasia: this.nomeFantasia,
       cnpj: this.cnpj
     })
-    const result = await this.pharmacyRepository.save(farmacia)
+    const result = await this.companyRepository.save(farmacia)
     for (const telefone of this.phones) {
       const telefoneRepo = PhonesRepository()
       if (await telefoneRepo.findOne({ phoneNumber: telefone })) continue
@@ -45,9 +45,9 @@ class PharmacyService implements PharmacyT {
     return result
   }
 
-  async update (id: string): Promise<Pharmacy> {
+  async update (id: string): Promise<Company> {
     try {
-      const result = await this.pharmacyRepository.save({
+      const result = await this.companyRepository.save({
         id,
         razaoSocial: this.razaoSocial,
         nomeFantasia: this.nomeFantasia,
@@ -59,13 +59,13 @@ class PharmacyService implements PharmacyT {
     }
   }
 
-  static async getAllPharmacies (): Promise<Pharmacy[]> {
-    const repo = PharmacyRepository()
+  static async getAllPharmacies (): Promise<Company[]> {
+    const repo = CompanyRepository()
     return await repo.find({ relations: ['phones'] })
   }
 
-  static async getSomePharmacies (filter: string): Promise<Pharmacy | Pharmacy[] | undefined> {
-    const repo = PharmacyRepository()
+  static async getSomePharmacies (filter: string): Promise<Company | Company[] | undefined> {
+    const repo = CompanyRepository()
     return await repo.find({
       where: [
         { razaoSocial: Like(`%${filter}%`) },
@@ -76,10 +76,10 @@ class PharmacyService implements PharmacyT {
     })
   }
 
-  static async getOnePharmacy (id: string): Promise<Pharmacy | undefined> {
-    const repo = PharmacyRepository()
+  static async getOnePharmacy (id: string): Promise<Company | undefined> {
+    const repo = CompanyRepository()
     return await repo.findOne(id, { relations: ['phones'] })
   }
 }
 
-export default PharmacyService
+export default CompanyService

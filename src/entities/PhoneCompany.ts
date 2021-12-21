@@ -1,19 +1,19 @@
 import { Column, Entity, ManyToOne } from 'typeorm'
 import { BaseEntity } from './BaseEntity'
-import { Pharmacy } from './Pharmacy'
+import { Company } from './Company'
 
-export type PhonePharmacyT = {
+export type PhoneCompanyT = {
   numeroTelefone: string
 }
 
 @Entity()
-export class PhonePharmacy extends BaseEntity {
+export class PhoneCompany extends BaseEntity {
   @Column({
     nullable: false,
     unique: true
   })
   phoneNumber: string
 
-  @ManyToOne(() => Pharmacy, pharmacy => pharmacy.phones)
-  farmacia: Pharmacy
+  @ManyToOne(() => Company, company => company.phones)
+  companies: Company
 }

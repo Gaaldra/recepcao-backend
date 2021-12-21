@@ -1,12 +1,12 @@
 import { Column, Entity, ManyToOne, UpdateDateColumn } from 'typeorm'
 import { BaseEntity } from './BaseEntity'
-import { Pharmacy } from './Pharmacy'
+import { Company } from './Company'
 
 export type TicketT = {
   topic: string
   observation: string
   tecnico: string
-  pharmacy: Pharmacy
+  company: Company
 }
 
 @Entity()
@@ -20,8 +20,8 @@ export class Ticket extends BaseEntity {
   @Column()
   tecnico: string
 
-  @ManyToOne(() => Pharmacy, pharmacy => pharmacy.tickets)
-  pharmacy: Pharmacy
+  @ManyToOne(() => Company, company => company.tickets)
+  company: Company
 
   @UpdateDateColumn()
   updatedAt: Date
