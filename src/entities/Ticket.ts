@@ -10,7 +10,7 @@ export type TicketT = {
 }
 
 @Entity()
-export default class Ticket extends BaseEntity {
+export class Ticket extends BaseEntity {
   @Column()
   topic: string
 
@@ -25,4 +25,9 @@ export default class Ticket extends BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date
+
+  @Column({
+    nullable: true
+  })
+  closedAt: Date
 }

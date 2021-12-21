@@ -1,10 +1,10 @@
-import { InvalidRequest } from '@errors/InvalidRequest'
+import InvalidRequest from '@errors/InvalidRequest'
 import PharmacyService from '@services/PharmacyService'
 import { NextFunction, Request, Response } from 'express'
 import { PharmacyT } from 'src/entities/Pharmacy'
 
 class PharmacyController {
-  async createPharmacy(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
+  async createPharmacy (request: Request, response: Response, next: NextFunction): Promise<Response | void> {
     try {
       const newFarm: PharmacyT = request.body
       const farmaciaService = new PharmacyService(newFarm)
@@ -15,7 +15,7 @@ class PharmacyController {
     }
   }
 
-  async updatePharmacy(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
+  async updatePharmacy (request: Request, response: Response, next: NextFunction): Promise<Response | void> {
     try {
       const { razaoSocial, nomeFantasia, cnpj, phones: telefones }: PharmacyT = request.body
       const { id } = request.params
@@ -28,7 +28,7 @@ class PharmacyController {
     }
   }
 
-  async getAllPharmacies(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
+  async getAllPharmacies (request: Request, response: Response, next: NextFunction): Promise<Response | void> {
     try {
       const result = await PharmacyService.getAllPharmacies()
       return response.json(result)
@@ -37,7 +37,7 @@ class PharmacyController {
     }
   }
 
-  async getSomePharmacy(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
+  async getSomePharmacy (request: Request, response: Response, next: NextFunction): Promise<Response | void> {
     try {
       const { filter } = request.params
       if (!filter) return next(new InvalidRequest())
@@ -48,7 +48,7 @@ class PharmacyController {
     }
   }
 
-  async getOnePharmacy(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
+  async getOnePharmacy (request: Request, response: Response, next: NextFunction): Promise<Response | void> {
     try {
       const { id } = request.params
       if (!id) return next(new InvalidRequest())

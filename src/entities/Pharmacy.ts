@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, Unique } from 'typeorm'
 import { BaseEntity } from './BaseEntity'
 import { PhonePharmacy } from './PhonePharmacy'
-import Ticket from './Ticket'
+import { Ticket } from './Ticket'
 
 export type PharmacyT = {
   razaoSocial: string
