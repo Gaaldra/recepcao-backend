@@ -3,7 +3,7 @@ import CompanyService from '@services/CompanyService'
 import { NextFunction, Request, Response } from 'express'
 import { CompanyT } from 'src/entities/Company'
 
-class PharmacyController {
+class CompanyController {
   async createPharmacy (request: Request, response: Response, next: NextFunction): Promise<Response | void> {
     try {
       const newFarm: CompanyT = request.body
@@ -31,7 +31,7 @@ class PharmacyController {
   async getAllPharmacies (request: Request, response: Response, next: NextFunction): Promise<Response | void> {
     try {
       const result = await CompanyService.getAllPharmacies()
-      return response.json(result)
+      return response.send(JSON.stringify(result))
     } catch (error) {
       next(error)
     }
@@ -60,4 +60,4 @@ class PharmacyController {
   }
 }
 
-export default new PharmacyController()
+export default new CompanyController()
